@@ -1,9 +1,8 @@
-import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { reducer as amountReducer } from '../features/amount';
+import { combineSlices, configureStore } from '@reduxjs/toolkit';
+import { amountSlice } from '../features/amount';
+import { positionSlice } from '../features/position';
 
-const rootReducer = combineReducers({
-  amount: amountReducer,
-});
+const rootReducer = combineSlices(amountSlice, positionSlice);
 
 export const store = configureStore({
   reducer: rootReducer,

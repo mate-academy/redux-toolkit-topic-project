@@ -1,4 +1,4 @@
-import { actions } from '../features/amount';
+import { amountSlice } from '../features/amount';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 
 export const Amount = () => {
@@ -6,15 +6,15 @@ export const Amount = () => {
   const amount = useAppSelector(state => state.amount);
 
   const take = (value: number) => {
-    dispatch(actions.takeMoney(value));
+    dispatch(amountSlice.actions.takeMoney(value));
   };
 
   const add = (value: number) => {
-    dispatch(actions.addMoney(value));
+    dispatch(amountSlice.actions.addMoney(value));
   };
 
   const clear = () => {
-    dispatch(actions.clearBalance());
+    dispatch(amountSlice.actions.clearBalance());
   };
 
   return (
