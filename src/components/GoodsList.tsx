@@ -1,26 +1,23 @@
 import React, { useState } from 'react';
+import { useAppDispatch, useAppSelector } from '../app/hooks';
+import { Good, goodsSlice } from '../features/goods';
 
 export const GoodsList = () => {
   const [newGood, setNewGood] = useState('');
-  const [goods, setGoods] = useState<string[]>(['Apple', 'Banana', 'Coconut']);
+  const goods = useAppSelector(state => state.goods);
+  const dispatch = useAppDispatch();
 
-  const addGood = (goodToAdd: string) => {
-    setGoods(current => [...current, goodToAdd]);
+  const addGood = (good: Good) => {
+    dispatch(goodsSlice.actions.addGood(good));
   }
 
-  const removeGood = (goodToRemove: string) => {
-    setGoods(current => current.filter(
-      good => good !== goodToRemove,
-    ));
+  const removeGood = (good: Good) => {
+    dispatch(goodsSlice.actions.removeGood(good));
   };
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-
-    if (!newGood) {
-      return;
-    }
-
+    if (!newGood) return;
     addGood(newGood);
     setNewGood('');
   };
