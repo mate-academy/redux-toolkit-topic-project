@@ -4,7 +4,7 @@ import { Good, goodsSlice } from '../features/goods';
 
 export const GoodsList = () => {
   const [newGood, setNewGood] = useState('');
-  const goods = useAppSelector(state => state.goods);
+  const { goods } = useAppSelector(state => state.goods);
   const dispatch = useAppDispatch();
 
   const addGood = (good: Good) => {
