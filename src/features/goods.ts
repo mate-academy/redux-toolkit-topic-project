@@ -1,4 +1,4 @@
-import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { PayloadAction, asyncThunkCreator, buildCreateSlice } from '@reduxjs/toolkit';
 
 export type Good = string;
 
@@ -8,42 +8,46 @@ const initialState = {
   error: '',
 };
 
-export const loadGoods = createAsyncThunk(
-  'goods/fetch', // префікс для `action.type`
-  async () => {
-    // будь-яка асинхронна логіка
-    return [] as Good[];
-  },
-);
+// `buildCreateSlice` allows us to create a slice with async thunks.
+export const createAppSlice = buildCreateSlice({
+  creators: { asyncThunk: asyncThunkCreator },
+})
 
-export const goodsSlice = createSlice({
+export const goodsSlice = createAppSlice({
   name: 'goods',
   initialState,
-  reducers: {
-    addGood(state, { payload }: PayloadAction<string>) {
-      state.goods.push(payload);
-    },
-    removeGood(state, { payload }: PayloadAction<string>) {
-      state.goods = state.goods.filter(good => good !== payload);
-    },
-    clearGoods(state) {
-      state.goods = [];
-    },
-  },
-  extraReducers(builder) {
-    builder.addCase(loadGoods.pending, (state) => {
-      state.error = '';
-      state.loading = true;
-    });
-
-    builder.addCase(loadGoods.fulfilled, (state, action) => {
-      state.goods = action.payload;
-      state.loading = false;
-    });
-
-    builder.addCase(loadGoods.rejected, (state, action) => {
-      state.error = action.error.message || '';
-      state.loading = false;
-    });
+  reducers(create) {
+    return {
+      addGood: create.reducer((state, { payload }: PayloadAction<Good>) => {
+        state.goods.push(payload);
+      }),
+      removeGood: create.reducer((state, { payload }: PayloadAction<Good>) => {
+        state.goods = state.goods.filter(good => good !== payload);
+      }),
+      clearGoods: create.reducer((state) => {
+        state.goods = [];
+      }),
+      loadGoods: create.asyncThunk(
+        async () => {
+          // будь-яка асинхронна логіка
+          return [] as Good[];
+        },
+        {
+          pending: (state) => {
+            state.loading = true
+          },
+          rejected: (state, action) => {
+            state.error = action.error.message ?? String(action.payload)
+          },
+          fulfilled: (state, action) => {
+            state.goods = action.payload;
+          },
+          // settled is called for both rejected and fulfilled actions
+          settled: (state) => {
+            state.loading = false;
+          },
+        }
+      )
+    };
   },
 });

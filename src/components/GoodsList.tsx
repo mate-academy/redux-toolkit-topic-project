@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { Good, goodsSlice } from '../features/goods';
 
@@ -6,6 +6,10 @@ export const GoodsList = () => {
   const [newGood, setNewGood] = useState('');
   const { goods } = useAppSelector(state => state.goods);
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(goodsSlice.actions.loadGoods());
+  }, [])
 
   const addGood = (good: Good) => {
     dispatch(goodsSlice.actions.addGood(good));
