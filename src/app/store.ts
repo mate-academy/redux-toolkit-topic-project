@@ -1,3 +1,4 @@
+import type { Action, ThunkAction } from '@reduxjs/toolkit';
 import { combineSlices, configureStore } from '@reduxjs/toolkit';
 import { amountSlice } from '../features/amount';
 import { positionSlice } from '../features/position';
@@ -11,3 +12,10 @@ export const store = configureStore({
 
 export type RootState = ReturnType<typeof rootReducer>;
 export type AppDispatch = typeof store.dispatch;
+
+export type AppThunk<ThunkReturnType = void> = ThunkAction<
+  ThunkReturnType,
+  RootState,
+  unknown,
+  Action
+>

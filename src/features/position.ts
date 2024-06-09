@@ -1,3 +1,4 @@
+import type { AppThunk } from '../app/store';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
 export const positionSlice = createSlice({
@@ -18,3 +19,19 @@ export const positionSlice = createSlice({
     },
   },
 });
+
+function wait(delay: number) {
+  return new Promise(resolve => setTimeout(resolve, delay));
+}
+
+export function circle(delay: number): AppThunk<Promise<void>> {
+  return async (dispatch) => {
+    dispatch(positionSlice.actions.moveRight());
+    await wait(delay);
+    dispatch(positionSlice.actions.moveDown());
+    await wait(delay);
+    dispatch(positionSlice.actions.moveLeft());
+    await wait(delay);
+    dispatch(positionSlice.actions.moveUp());
+  };
+}

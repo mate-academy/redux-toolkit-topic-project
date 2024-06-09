@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from '../app/hooks';
-import { positionSlice } from '../features/position';
+import { circle, positionSlice } from '../features/position';
 
 export const Position = () => {
   const { x, y } = useAppSelector(state => state.position);
@@ -30,7 +30,14 @@ export const Position = () => {
         </div>
 
         <div className="field">
-          <div className="track" style={{ transform: transformValue }}>
+          <div
+            className="track"
+            style={{ transform: transformValue }}
+            onClick={async () => {
+              await dispatch(circle(500))
+              console.log('Circle is done!');
+            }}
+          >
             {x + y}
           </div>
         </div>
